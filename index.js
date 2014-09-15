@@ -5,4 +5,4 @@ var coffee = require('coffee-script');
 if (typeof coffee.register !== 'undefined') coffee.register();
  
 // Include our application file
-var app = require(process.argv[2] || './app.coffee');
+var app = require(process.argv[2] || './server.coffee');
