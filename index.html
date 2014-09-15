@@ -1,0 +1,60 @@
+<html>
+<head>
+<script src='socket.io/socket.io.js'></script>
+</head>
+<body>
+<style>
+.opinion {
+  margin-left: 20px;
+  color: red;
+}
+</style>
+<input id='slider' type="range" value=4 min=1 max=7></input>
+<div>
+  <p>Your opinion:</p>
+  <div class="opinion" id="your_opinion">
+  </div>
+</div>
+<div>
+  <p>Average crowd opinion:</p>
+  <div class="opinion" id="crowd_opinion">
+  </div>
+</div>
+
+<script>
+var socket = io.connect();
+var slider = document.getElementById('slider');
+var map = {
+  1: 'What the what?',
+  2: 'I think I get it',
+  3: 'Easy, now',
+  4: 'I see',
+  5: 'Oh, cool',
+  6: 'Well, yeah',
+  7: 'OMG, obviously'
+}
+function generateUUID(){
+  var d = new Date().getTime();
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = (d + Math.random()*16)%16 | 0;
+      d = Math.floor(d/16);
+      return (c=='x' ? r : (r&0x7|0x8)).toString(16);
+      });
+  return uuid;
+};
+var uuid = generateUUID();
+var update_opinion = function() {
+  document.getElementById('your_opinion').innerText = map[slider.value];
+  socket.emit('rating', {rating: slider.value, uuid: uuid});
+};
+var update_crowd = function(average) {
+  document.getElementById('crowd_opinion').innerText = map[average];
+};
+update_opinion();
+slider.onchange = update_opinion;
+socket.on('average', function(average) {
+  update_crowd(average);
+});
+</script>
+</body>
+</html>
