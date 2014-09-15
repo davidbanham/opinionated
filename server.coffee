@@ -25,7 +25,7 @@ setInterval ->
   for _, rating of ratings
     sum += rating
   average = sum / Object.keys(ratings).length
-  io.emit 'average', average
+  io.emit 'average', parseInt average
 , 1000
 
 app.listen process.env.PORT or 3000
